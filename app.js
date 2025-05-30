@@ -3,10 +3,11 @@ const userRouter = require('./routes/user.routes');
 // const {body,validationResult} =  require('express-validator');
 const dotenv = require('dotenv')
 dotenv.config()
-
 const connectToDb = require('./config/db')
+const cookieParser = require('cookie-parser')
 connectToDb()
 const app = express();
+app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.set('view engine','ejs');

@@ -3,7 +3,7 @@ const router = express.Router();
 const { body, validationResult } = require("express-validator");
 const userModel = require("../models/user.model");
 const bcrypt = require("bcrypt");
-const jwt = require('jsonwebtoken')
+const jwt = require("jsonwebtoken");
 
 // router.get('/test',(req,res)=>{
 //     res.send('user test route')
@@ -46,36 +46,38 @@ router.post(
   body("username").trim().isLength({ min: 3 }),
   async (req, res) => {
     const errors = validationResult(req);
-    if(!errors.isEmpty()){
+    if (!errors.isEmpty()) {
       return res.status(400).json({
-        errors : errors.array(),
-        message:'invalid data'
-      })
-
+        errors: errors.array(),
+        message: "invalid data",
+      });
     }
-    const {username,password} = req.body;
+    const { username, password } = req.body;
     const user = await userModel.findOne({
-      username:username
-    })
-    if(!user){
+      username: username,
+    });
+    if (!user) {
       return res.status(400).json({
-        message:'username or password is wrong'
-      })
+        message: "username or password is wrong",
+      });
     }
-    const isMatch =  await bcrypt.compare(password,user.password)
-if(!isMatch){
-  return res.status(400).json({
-    message:'username or password is incorrect'
-  })
-}
-const token = jwt.sign({
-  userId:user._id,
-  email : user.email,
-  password:user.password
-
-},process.env.JWT_SECRET)
-
-  }   
-);                        
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({
+        message: "username or password is incorrect",
+      });
+    }
+    const token = jwt.sign(
+      {
+        userId: user._id,
+        email: user.email,
+        password: user.password,
+      },
+      process.env.JWT_SECRET
+    );
+   res.cookie('token',token)
+   res.send('logged in')
+  }
+);
 
 module.exports = router;
