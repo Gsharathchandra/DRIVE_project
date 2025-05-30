@@ -3,6 +3,9 @@ const userRouter = require('./routes/user.routes');
 // const {body,validationResult} =  require('express-validator');
 const dotenv = require('dotenv')
 dotenv.config()
+
+const connectToDb = require('./config/db')
+connectToDb()
 const app = express();
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
