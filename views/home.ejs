@@ -1,4 +1,4 @@
-<!doctype html>
+<!-- <!doctype html>
 <html>
   <head>
     <meta charset="UTF-8" />
@@ -47,6 +47,106 @@
       }
       function hidePopUP (){
         document.querySelector('.pop').style.display = 'none'
+      }
+    </script>
+  </body>
+</html> -->
+
+
+
+<!doctype html>
+<html>
+  <head>
+    <!-- Your existing head content -->
+  </head>
+  <body>
+    <main class="p-4 bg-gray-100 dark:bg-gray-800 h-screen w-screen">
+      <div class="flex justify-between items-center mb-4">
+        <h1 class="text-2xl font-bold">My Files</h1>
+        <button onclick="showPopUP()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
+          Upload file
+        </button>
+      </div>
+
+      <!-- File list -->
+      <div id="fileList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Files will be loaded here -->
+      </div>
+
+      <!-- Your existing popup code -->
+    </main>
+
+    <script>
+      // Load files when page loads
+      document.addEventListener('DOMContentLoaded', async () => {
+        try {
+          const response = await fetch('/files/list', {
+            credentials: 'include' // Important for cookies
+          });
+          
+          if (!response.ok) throw new Error('Failed to load files');
+          
+          const files = await response.json();
+          renderFiles(files);
+        } catch (error) {
+          console.error(error);
+          alert('Error loading files');
+        }
+      });
+
+      function renderFiles(files) {
+        const container = document.getElementById('fileList');
+        container.innerHTML = files.map(file => `
+          <div class="bg-white dark:bg-gray-700 rounded-lg p-4 shadow">
+            <div class="flex items-center mb-2">
+              <i class="ri-file-text-line text-2xl mr-2"></i>
+              <span class="truncate">${file.filename}</span>
+            </div>
+            <div class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+              ${(file.length / 1024).toFixed(2)} KB
+            </div>
+            <div class="flex space-x-2">
+              <button onclick="downloadFile('${file._id}')" class="text-blue-500 hover:text-blue-700">
+                <i class="ri-download-line"></i>
+              </button>
+              <button onclick="deleteFile('${file._id}')" class="text-red-500 hover:text-red-700">
+                <i class="ri-delete-bin-line"></i>
+              </button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      async function downloadFile(fileId) {
+        window.open(`/files/download/${fileId}`, '_blank');
+      }
+
+      async function deleteFile(fileId) {
+        try {
+          const response = await fetch(`/files/delete/${fileId}`, {
+            method: 'DELETE',
+            credentials: 'include'
+          });
+          
+          if (!response.ok) throw new Error('Failed to delete file');
+          
+          const result = await response.json();
+          alert(result.message);
+          // Refresh file list
+          location.reload();
+        } catch (error) {
+          console.error(error);
+          alert('Error deleting file');
+        }
+      }
+
+      // Your existing popup functions
+      function showPopUP() {
+        document.querySelector('.pop').style.display = 'flex';
+      }
+      
+      function hidePopUP() {
+        document.querySelector('.pop').style.display = 'none';
       }
     </script>
   </body>
