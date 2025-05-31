@@ -33,7 +33,10 @@ const connectToDb = require('./config/db');
 const authRouter = require('./routes/auth.routes');
 const fileRouter = require('./routes/file.routes');
 
+
 const app = express();
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
 // Middleware
 app.use(express.json());
