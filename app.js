@@ -28,7 +28,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const path = require('path');
-const connectToDb = require('./db/connect');
+// const connectToDb = require('./db/connect');
+const connectToDb = require('./config/db')
 const userRouter = require('./routes/user.routes');
 const fileRouter = require('./routes/file.routes');
 
