@@ -24,14 +24,14 @@
     
 // })
 
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const path = require('path');
-// const connectToDb = require('./db/connect');
-const connectToDb = require('./config/db')
-const userRouter = require('./routes/file.routes');
-const fileRouter = require('./routes/auth.routes');
+const connectToDb = require('./config/db');
+const authRouter = require('./routes/auth.routes');
+const fileRouter = require('./routes/file.routes');
 
 const app = express();
 
@@ -40,14 +40,21 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.set('view engine', 'html');
 
-// Connect to DB
+// Database connection
 connectToDb();
 
 // Routes
-app.use('/user', userRouter);
+app.use('/auth', authRouter);
 app.use('/files', fileRouter);
 
+// Views
+app.get('/', (req, res) => res.render('home'));
+app.get('/login', (req, res) => res.render('login'));
+app.get('/register', (req, res) => res.render('register'));
+
+// Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
