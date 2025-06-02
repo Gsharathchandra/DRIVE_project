@@ -1,9 +1,13 @@
 const express = require('express');
-const router = express.Router();
-const authMiddleware = require('../middleware/auth');
+  const router = express.Router();
+  const authMiddleware = require('../middleware/auth');
 
-router.get('/home', authMiddleware, (req, res) => {
-  res.render('home', { csrfToken: res.locals.csrfToken });
-});
+  router.get('/', (req, res) => {
+    res.redirect('/user/login');
+  });
 
-module.exports = router;
+  router.get('/home', authMiddleware, (req, res) => {
+    res.render('home', { error: req.query.error });
+  });
+
+  module.exports = router;
