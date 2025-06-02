@@ -1,21 +1,12 @@
-// const mongoose = require('mongoose')
-
-// function connectToDb(){
-//     mongoose.connect(process.env.MONGO_URI).then(()=>{
-//         console.log('connected to database')
-//     })
-// }
-
-// module.exports = connectToDb;
-
-
 require('dotenv').config();
 const mongoose = require('mongoose');
 
 const dbOptions = {
   maxPoolSize: 10,
   connectTimeoutMS: 10000,
-  socketTimeoutMS: 45000
+  socketTimeoutMS: 45000,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 };
 
 async function connectToDb() {
