@@ -5,8 +5,6 @@ const dbOptions = {
   maxPoolSize: 10,
   connectTimeoutMS: 10000,
   socketTimeoutMS: 45000,
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
 };
 
 async function connectToDb() {
